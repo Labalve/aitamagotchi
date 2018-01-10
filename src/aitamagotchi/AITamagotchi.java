@@ -1,9 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package aitamagotchi;
+
+import java.awt.EventQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javax.management.timer.Timer;
 
 /**
  *
@@ -15,7 +16,17 @@ public class AITamagotchi {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Gotchi tama = new Gotchi("Ziomek");
+        MainFrame mainFrame = new MainFrame(tama);
+
+        Runnable tamaLive = new Runnable() {
+            public void run() {
+                tama.live();
+                mainFrame.updateStats(tama);
+            }
+        };
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(tamaLive, 0, 1, TimeUnit.SECONDS);
     }
-    
+
 }
