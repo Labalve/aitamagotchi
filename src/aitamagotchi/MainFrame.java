@@ -16,8 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class MainFrame extends JFrame {
-        
-    static JLabel textOutputLabel = new JLabel();//TextOutputPanel();
+
+    static JLabel generalStatusLabel = new JLabel();
+    static JLabel hungerLabel = new JLabel();
+    static JLabel lonelinessLabel = new JLabel();
+    static JLabel dirtinessLabel = new JLabel();
 
     public MainFrame(Gotchi tama) {
         super("AITamagotchi");
@@ -27,10 +30,10 @@ public class MainFrame extends JFrame {
 
         JPanel imagePanel = new ImagePanel();
         add(imagePanel);
-        String string = "test";
-//       textOutputPanel.printOutput = "AAA";
-        add(textOutputLabel);
-//        textOutputPanel.grInterface.drawString("AAAAA", 15, 15);
+        add(generalStatusLabel);
+        add(hungerLabel);
+        add(lonelinessLabel);
+        add(dirtinessLabel);
 
         JButton feedButton = new JButton("Feed");
         feedButton.addActionListener(new ActionListener() {
@@ -40,13 +43,31 @@ public class MainFrame extends JFrame {
         });
         add(feedButton);
 
+        JButton interactButton = new JButton("Interact");
+        interactButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                tama.beInteractedWith(50);
+            }
+        });
+        add(interactButton);
+
+        JButton cleanButton = new JButton("Clean");
+        cleanButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                tama.beCleaned(50);
+            }
+        });
+        add(cleanButton);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
     }
 
     void updateStats(Gotchi tama) {
-        textOutputLabel.setText(String.valueOf(tama.hunger));
-        
+        generalStatusLabel.setText(tama.currentGeneralStatus);
+        hungerLabel.setText(tama.name + "'s hunger: " + String.valueOf(tama.hunger));
+        lonelinessLabel.setText(tama.name + "'s loneliness: " + String.valueOf(tama.loneliness));
+        dirtinessLabel.setText(tama.name + "'s dirtiness: " + String.valueOf(tama.dirtiness));
     }
 }

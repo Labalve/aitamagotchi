@@ -22,11 +22,18 @@ public class AITamagotchi {
         Runnable tamaLive = new Runnable() {
             public void run() {
                 tama.live();
-                mainFrame.updateStats(tama);
             }
         };
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(tamaLive, 0, 1, TimeUnit.SECONDS);
+    
+    Runnable interfaceRefresh = new Runnable() {
+            public void run() {
+                mainFrame.updateStats(tama);
+            }
+        };
+        ScheduledExecutorService interfaceExecutor = Executors.newScheduledThreadPool(2);
+        interfaceExecutor.scheduleAtFixedRate(interfaceRefresh, 0, 100, TimeUnit.MILLISECONDS);
     }
 
 }
