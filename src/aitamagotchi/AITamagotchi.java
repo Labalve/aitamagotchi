@@ -16,8 +16,8 @@ public class AITamagotchi {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Gotchi tama = new Gotchi("Ziomek");
-        MainFrame mainFrame = new MainFrame(tama);
+        Gotchi tama = Gotchi.getGotchi("Ziomek");
+        MainFrame mainFrame = MainFrame.getMainFrame();
 
         Runnable tamaLive = new Runnable() {
             public void run() {
@@ -29,7 +29,7 @@ public class AITamagotchi {
     
     Runnable interfaceRefresh = new Runnable() {
             public void run() {
-                mainFrame.updateStats(tama);
+                mainFrame.updateStats();
             }
         };
         ScheduledExecutorService interfaceExecutor = Executors.newScheduledThreadPool(2);

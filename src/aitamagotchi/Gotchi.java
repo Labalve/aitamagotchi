@@ -6,6 +6,8 @@ package aitamagotchi;
  */
 public class Gotchi {
 
+    static Gotchi instance;
+
     int hunger;
     int hungerLimit = 10;
     int loneliness;
@@ -16,7 +18,21 @@ public class Gotchi {
     String currentGeneralStatus = "<html>";
     gotchiDictionary dictionary = gotchiDictionary.getGotchiDictionary();
 
-    public Gotchi(String name) {
+    public static Gotchi getGotchi(String name) {
+        if (instance == null) {
+            instance = new Gotchi(name);
+        }
+        return instance;
+    }
+
+    public static Gotchi getGotchi() {
+        if (instance == null) {
+            instance = new Gotchi("Gotchi");
+        }
+        return instance;
+    }
+
+    private Gotchi(String name) {
         this.name = name;
     }
 
@@ -33,6 +49,7 @@ public class Gotchi {
         if (dirtiness == dirtinessLimit) {
             currentGeneralStatus += dictionary.dirtinessMessage;
         }
+        checkGeneralStatus();
     }
 
     public void beFed(int amount) {
@@ -43,6 +60,7 @@ public class Gotchi {
         }
         if (hunger < hungerLimit && currentGeneralStatus.contains(dictionary.hungerMessage)) {
             currentGeneralStatus = currentGeneralStatus.replace(dictionary.hungerMessage, "");
+            checkGeneralStatus();
         }
     }
 //        System.out.println("current hunger: " + hunger);
@@ -56,6 +74,7 @@ public class Gotchi {
         if (loneliness < lonelinessLimit && currentGeneralStatus.contains(dictionary.lonelinessMessage)) {
             currentGeneralStatus = currentGeneralStatus.replace(dictionary.lonelinessMessage, "");
         }
+        checkGeneralStatus();
     }
 
     public void beCleaned(int amount) {
@@ -66,6 +85,16 @@ public class Gotchi {
         }
         if (dirtiness < dirtinessLimit && currentGeneralStatus.contains(dictionary.dirtinessMessage)) {
             currentGeneralStatus = currentGeneralStatus.replace(dictionary.dirtinessMessage, "");
+        }
+        checkGeneralStatus();
+    }
+
+    void checkGeneralStatus() {
+        MainFrame mainFrame = MainFrame.getMainFrame();
+        if (currentGeneralStatus == "<html>") {
+            mainFrame.setAvatar("happy");
+        } else {
+            mainFrame.setAvatar("sad");
         }
     }
 }
