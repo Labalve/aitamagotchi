@@ -49,7 +49,6 @@ public class Gotchi {
         if (dirtiness == dirtinessLimit) {
             currentGeneralStatus += dictionary.dirtinessMessage;
         }
-        checkGeneralStatus();
     }
 
     public void beFed(int amount) {
@@ -60,10 +59,8 @@ public class Gotchi {
         }
         if (hunger < hungerLimit && currentGeneralStatus.contains(dictionary.hungerMessage)) {
             currentGeneralStatus = currentGeneralStatus.replace(dictionary.hungerMessage, "");
-            checkGeneralStatus();
         }
     }
-//        System.out.println("current hunger: " + hunger);
 
     public void beInteractedWith(int amount) {
         if (loneliness - amount > 0) {
@@ -74,7 +71,6 @@ public class Gotchi {
         if (loneliness < lonelinessLimit && currentGeneralStatus.contains(dictionary.lonelinessMessage)) {
             currentGeneralStatus = currentGeneralStatus.replace(dictionary.lonelinessMessage, "");
         }
-        checkGeneralStatus();
     }
 
     public void beCleaned(int amount) {
@@ -86,15 +82,13 @@ public class Gotchi {
         if (dirtiness < dirtinessLimit && currentGeneralStatus.contains(dictionary.dirtinessMessage)) {
             currentGeneralStatus = currentGeneralStatus.replace(dictionary.dirtinessMessage, "");
         }
-        checkGeneralStatus();
     }
 
-    void checkGeneralStatus() {
-        MainFrame mainFrame = MainFrame.getMainFrame();
-        if (currentGeneralStatus == "<html>") {
-            mainFrame.setAvatar("happy");
+    String getGeneralStatus() {
+        if (currentGeneralStatus.equals("<html>")) {
+            return "happy";
         } else {
-            mainFrame.setAvatar("sad");
+            return "sad";
         }
     }
 }

@@ -24,16 +24,18 @@ public class MainFrame extends JFrame {
 
     static private MainFrame instance;
 
-    static Gotchi tama = Gotchi.getGotchi("Ziomek");
+    Gotchi tama = Gotchi.getGotchi("Ziomek");
 
-    static JLabel avatar = new JLabel();
-    static JLabel generalStatusLabel = new JLabel();
-    static JLabel hungerLabel = new JLabel();
-    static JLabel lonelinessLabel = new JLabel();
-    static JLabel dirtinessLabel = new JLabel();
+    JLabel avatar = new JLabel();
+    JLabel generalStatusLabel = new JLabel();
+    JLabel hungerLabel = new JLabel();
+    JLabel lonelinessLabel = new JLabel();
+    JLabel dirtinessLabel = new JLabel();
 
     ImageIcon happyIcon;
     ImageIcon sadIcon;
+
+    String currentAvatar = "happy";
 
     public static MainFrame getMainFrame() {
         if (instance == null) {
@@ -60,6 +62,7 @@ public class MainFrame extends JFrame {
         avatar.setIcon(happyIcon);
         add(avatar);
         add(generalStatusLabel);
+        add(new JLabel());
         add(hungerLabel);
         add(lonelinessLabel);
         add(dirtinessLabel);
@@ -98,16 +101,18 @@ public class MainFrame extends JFrame {
         hungerLabel.setText(tama.name + "'s hunger: " + String.valueOf(tama.hunger));
         lonelinessLabel.setText(tama.name + "'s loneliness: " + String.valueOf(tama.loneliness));
         dirtinessLabel.setText(tama.name + "'s dirtiness: " + String.valueOf(tama.dirtiness));
+        if (!(tama.getGeneralStatus().equals(currentAvatar))) setAvatar(tama.getGeneralStatus());
     }
 
     void setAvatar(String type) {
-        switch (type) {
-            case "happy":
-                avatar.setIcon(happyIcon);
-                break;
-            case "sad":
-                avatar.setIcon(sadIcon);
-                break;
-        }
+            switch (type) {
+                case "happy":
+                    avatar.setIcon(happyIcon);
+                    break;
+                case "sad":
+                    avatar.setIcon(sadIcon);
+                    break;
+            }
+            currentAvatar = type;
     }
 }
