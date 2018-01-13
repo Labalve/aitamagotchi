@@ -1,5 +1,7 @@
 package aitamagotchi;
 
+import java.util.Random;
+
 /**
  *
  * @author Labalve
@@ -44,7 +46,7 @@ public class Gotchi {
     }
 
     private Gotchi(String name) {
-        name = name;
+        this.name = name;
         isInLove = isAngry = hasGivenUp = isVeryAngry = false;
     }
 
@@ -52,56 +54,55 @@ public class Gotchi {
         hunger++;
         loneliness++;
         dirtiness++;
-        if (hunger == hungerLimit) {
-            currentGeneralStatus += dictionary.hungerMessage;
-        }
-        if (loneliness == lonelinessLimit) {
-            currentGeneralStatus += dictionary.lonelinessMessage;
-        }
-        if (dirtiness == dirtinessLimit) {
-            currentGeneralStatus += dictionary.dirtinessMessage;
-        }
         setIfLoves();
         setIfGivenUp();
         setIfAngry();
     }
 
-    private void setIfLoves(){
-        if(isInLove && anger > angerEndLoveLimit) {
+    private void setIfLoves() {
+        if (isInLove && anger > angerEndLoveLimit) {
             isInLove = false;
         }
-        if(!hasGivenUp && !isInLove && !isAngry && fedCount >= fedLoveLimit && interactionCount >= interactionLoveLimit){
+        if (!hasGivenUp && !isInLove && !isAngry && fedCount >= fedLoveLimit && interactionCount >= interactionLoveLimit) {
             isInLove = true;
         }
     }
-    
-    private void setIfGivenUp(){
-        if(!hasGivenUp && hunger >= hungerGivingUpLimit && loneliness >= lonelinessGivingUpLimit && anger < (angerLimit * 10)){
+
+    private void setIfGivenUp() {
+        if (!hasGivenUp && hunger >= hungerGivingUpLimit && loneliness >= lonelinessGivingUpLimit && anger < (angerLimit * 10)) {
             hasGivenUp = true;
         }
     }
-    
+
     private void setIfAngry() {
-        if(hunger > (hungerLimit * 2) || loneliness > (lonelinessLimit * 2)) {
+        if (hunger >= (hungerLimit * 2) || loneliness >= (lonelinessLimit * 2)) {
             anger += 1;
         }
-        if(!hasGivenUp && !isAngry && anger >= angerLimit){
+        if (!hasGivenUp && !isAngry && anger >= angerLimit) {
             isAngry = true;
         }
-        if(!isVeryAngry && anger >= (angerLimit * 10)) {
-            isVeryAngry = true; isInLove = false; hasGivenUp = false;
+        if (!isVeryAngry && anger >= (angerLimit * 10)) {
+            isVeryAngry = true;
+            isInLove = false;
+            hasGivenUp = false;
         }
     }
-    
+
     private void calmDown() {
         anger -= 10;
-        if(anger < 0) anger = 0;
-        if(anger < angerLimit){
-            isAngry = false; isVeryAngry = false;
+        if (anger < 0) {
+            anger = 0;
+        }
+        if (anger < angerLimit) {
+            isAngry = false;
+            isVeryAngry = false;
         }
     }
-    
-    
+
+    public void beFed() {
+        beFed(hunger);
+    }
+
     public void beFed(int amount) {
         fedCount++;
         calmDown();
@@ -110,9 +111,10 @@ public class Gotchi {
         } else {
             hunger = 0;
         }
-        if (hunger < hungerLimit && currentGeneralStatus.contains(dictionary.hungerMessage)) {
-            currentGeneralStatus = currentGeneralStatus.replace(dictionary.hungerMessage, "");
-        }
+    }
+
+    public void beInteractedWith() {
+        beInteractedWith(loneliness);
     }
 
     public void beInteractedWith(int amount) {
@@ -123,9 +125,10 @@ public class Gotchi {
         } else {
             loneliness = 0;
         }
-        if (loneliness < lonelinessLimit && currentGeneralStatus.contains(dictionary.lonelinessMessage)) {
-            currentGeneralStatus = currentGeneralStatus.replace(dictionary.lonelinessMessage, "");
-        }
+    }
+
+    public void beCleaned() {
+        beCleaned(dirtiness);
     }
 
     public void beCleaned(int amount) {
@@ -135,22 +138,79 @@ public class Gotchi {
         } else {
             dirtiness = 0;
         }
-        if (dirtiness < dirtinessLimit && currentGeneralStatus.contains(dictionary.dirtinessMessage)) {
-            currentGeneralStatus = currentGeneralStatus.replace(dictionary.dirtinessMessage, "");
-        }
     }
 
     String getGeneralStatus() {
         String ret = "";
-        if(!hasGivenUp){
-            if(loneliness >= lonelinessLimit || hunger >= hungerLimit) ret += "sad ";
-            if(dirtiness >= dirtinessLimit) ret += "dirty ";
-            if(isAngry) ret += "angry ";
-            if(isInLove) ret += "in_love ";
-        }
-        else {
+        if (!hasGivenUp) {
+            if (loneliness >= lonelinessLimit || hunger >= hungerLimit) {
+                ret += "sad ";
+            }
+            if (dirtiness >= dirtinessLimit) {
+                ret += "dirty ";
+            }
+            if (isAngry) {
+                ret += "angry ";
+            }
+            if (isInLove) {
+                ret += "in_love ";
+            }
+        } else {
             ret += "has_given_up ";
-            if(dirtiness >= dirtinessLimit) ret += "dirty ";
+            if (dirtiness >= dirtinessLimit) {
+                ret += "dirty ";
+            }
+        }
+        return ret;
+    }
+
+    String saySomething() {
+        String statusBatch = getGeneralStatus() + ((hunger >= hungerLimit && !hasGivenUp) ? "hungry " : "")
+                + ((loneliness >= lonelinessLimit && !hasGivenUp) ? "lonely " : "")
+                + ((hunger >= hungerLimit && isAngry) ? "hangry " : "")
+                + ((hunger >= hungerLimit && isInLove) ? "love_hungry " : "")
+                + ((isAngry && isInLove) ? "angry_inLove " : "");
+        String[] statuses = statusBatch.split(" ");
+        Random rand = new Random();
+        return thinkOfSomethingToSay(statuses[rand.nextInt(statuses.length)]);
+    }
+
+    private String thinkOfSomethingToSay(String feeling) {
+        String ret = "";
+        switch (feeling) {
+            case "hangry":
+                ret = dictionary.hangryMessage;
+                break;
+            case "love_hungry":
+                ret = dictionary.love_hungryMessage;
+                break;
+            case "angry_inLove":
+                ret = dictionary.angry_inLoveMessage;
+                break;
+            case "sad":
+                ret = dictionary.sadMessage;                        
+                break;
+            case "angry":
+                ret = dictionary.angryMessage;
+                break;
+            case "hungry":
+                ret = dictionary.hungryMessage;
+                break;
+            case "lonely":
+                ret = dictionary.lonelyMessage;
+                break;
+            case "dirty":
+                ret = dictionary.dirtyMessage;
+                break;
+            case "in_love":
+                ret = dictionary.in_loveMessage;
+                break;
+            case "has_given_up":
+                ret = dictionary.has_given_upMessage;
+                break;
+            default:
+                ret = dictionary.defaultMessage;
+                break;
         }
         return ret;
     }

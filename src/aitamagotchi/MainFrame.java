@@ -31,8 +31,10 @@ public class MainFrame extends JFrame {
     JLabel dirtinessLabel = new JLabel();
 
     ImageIcon icon;
-    
+
     String currentAvatar = "happy";
+
+    Message currentMessage;
 
     public static MainFrame getMainFrame() {
         if (instance == null) {
@@ -45,7 +47,7 @@ public class MainFrame extends JFrame {
         super("AITamagotchi");
         setLocation(1000, 500);
         setSize(500, 250);
-        setLayout(new GridLayout(3, 0));
+        setLayout(new GridLayout(2, 3));
         icon = new ImageIcon();
         try {
             BufferedImage image = ImageIO.read(new File("img/neutral.jpg"));
@@ -57,10 +59,15 @@ public class MainFrame extends JFrame {
         add(avatar);
         add(generalStatusLabel);
         add(new JLabel());
-        add(hungerLabel);
+        
+        //stats for testing
+        /*add(hungerLabel);
         add(lonelinessLabel);
-        add(dirtinessLabel);
-
+        add(dirtinessLabel);*/
+        
+        currentMessage = new Message("My name is " + tama.name + ". Are you my Creator?");
+        generalStatusLabel.setText(currentMessage.getContent());
+        
         JButton feedButton = new JButton("Feed");
         feedButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -91,20 +98,26 @@ public class MainFrame extends JFrame {
     }
 
     void updateStats() {
-        generalStatusLabel.setText(tama.currentGeneralStatus);
-        hungerLabel.setText(tama.name + "'s hunger: " + String.valueOf(tama.hunger));
+        if (currentMessage.isEnding()) {
+            this.currentMessage = new Message();
+            generalStatusLabel.setText(currentMessage.getContent());
+        }
+        //stats for testing
+        /* hungerLabel.setText(tama.name + "'s hunger: " + String.valueOf(tama.hunger));
         lonelinessLabel.setText(tama.name + "'s loneliness: " + String.valueOf(tama.loneliness));
-        dirtinessLabel.setText(tama.name + "'s dirtiness: " + String.valueOf(tama.dirtiness));
+        dirtinessLabel.setText(tama.name + "'s dirtiness: " + String.valueOf(tama.dirtiness));*/
         if (!(tama.getGeneralStatus().equals(currentAvatar))) {
             setAvatar(tama.getGeneralStatus());
         }
     }
 
     void setAvatar(String type) {
-        if(type.equals("")) type = "neutral";
+        if (type.equals("")) {
+            type = "neutral";
+        }
         icon = new ImageIcon();
         try {
-            BufferedImage image = ImageIO.read(new File("img/"+type+".jpg"));
+            BufferedImage image = ImageIO.read(new File("img/" + type + ".jpg"));
             icon.setImage(image);
         } catch (IOException e) {
             System.out.println("Błąd ładowania obrazka");

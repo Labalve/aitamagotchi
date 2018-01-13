@@ -14,7 +14,7 @@ public class AITamagotchi {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Gotchi tama = Gotchi.getGotchi("Ziomek");
+        Gotchi tama = Gotchi.getGotchi("Tama");
         MainFrame mainFrame = MainFrame.getMainFrame();
 
         Runnable tamaLive = new Runnable() {
@@ -23,15 +23,17 @@ public class AITamagotchi {
             }
         };
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(tamaLive, 0, 500, TimeUnit.MILLISECONDS);
-    
-    Runnable interfaceRefresh = new Runnable() {
+// faster rate for test
+//executor.scheduleAtFixedRate(tamaLive, 0, 500, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(tamaLive, 0, 1, TimeUnit.SECONDS);
+
+        Runnable interfaceRefresh = new Runnable() {
             public void run() {
                 mainFrame.updateStats();
             }
         };
         ScheduledExecutorService interfaceExecutor = Executors.newScheduledThreadPool(2);
-        interfaceExecutor.scheduleAtFixedRate(interfaceRefresh, 0, 100, TimeUnit.MILLISECONDS);
+        interfaceExecutor.scheduleAtFixedRate(interfaceRefresh, 0, 500, TimeUnit.MILLISECONDS);
     }
 
 }
