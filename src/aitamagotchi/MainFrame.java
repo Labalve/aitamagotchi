@@ -17,12 +17,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 public class MainFrame extends JFrame {
 
-    static private MainFrame instance;
+    private static MainFrame instance;
 
     Gotchi tama = Gotchi.getGotchi("Ziomek");
 
@@ -32,9 +30,8 @@ public class MainFrame extends JFrame {
     JLabel lonelinessLabel = new JLabel();
     JLabel dirtinessLabel = new JLabel();
 
-    ImageIcon happyIcon;
-    ImageIcon sadIcon;
-
+    ImageIcon icon;
+    
     String currentAvatar = "happy";
 
     public static MainFrame getMainFrame() {
@@ -49,17 +46,14 @@ public class MainFrame extends JFrame {
         setLocation(1000, 500);
         setSize(500, 250);
         setLayout(new GridLayout(3, 0));
-        happyIcon = new ImageIcon();
-        sadIcon = new ImageIcon();
+        icon = new ImageIcon();
         try {
-            BufferedImage happyImage = ImageIO.read(new File("img/happy.jpg"));
-            happyIcon.setImage(happyImage);
-            BufferedImage sadImage = ImageIO.read(new File("img/sad.jpg"));
-            sadIcon.setImage(sadImage);
+            BufferedImage image = ImageIO.read(new File("img/neutral.jpg"));
+            icon.setImage(image);
         } catch (IOException e) {
             System.out.println("Błąd ładowania obrazka");
         }
-        avatar.setIcon(happyIcon);
+        avatar.setIcon(icon);
         add(avatar);
         add(generalStatusLabel);
         add(new JLabel());
@@ -101,18 +95,21 @@ public class MainFrame extends JFrame {
         hungerLabel.setText(tama.name + "'s hunger: " + String.valueOf(tama.hunger));
         lonelinessLabel.setText(tama.name + "'s loneliness: " + String.valueOf(tama.loneliness));
         dirtinessLabel.setText(tama.name + "'s dirtiness: " + String.valueOf(tama.dirtiness));
-        if (!(tama.getGeneralStatus().equals(currentAvatar))) setAvatar(tama.getGeneralStatus());
+        if (!(tama.getGeneralStatus().equals(currentAvatar))) {
+            setAvatar(tama.getGeneralStatus());
+        }
     }
 
     void setAvatar(String type) {
-            switch (type) {
-                case "happy":
-                    avatar.setIcon(happyIcon);
-                    break;
-                case "sad":
-                    avatar.setIcon(sadIcon);
-                    break;
-            }
-            currentAvatar = type;
+        if(type.equals("")) type = "neutral";
+        icon = new ImageIcon();
+        try {
+            BufferedImage image = ImageIO.read(new File("img/"+type+".jpg"));
+            icon.setImage(image);
+        } catch (IOException e) {
+            System.out.println("Błąd ładowania obrazka");
+        }
+        avatar.setIcon(icon);
+        currentAvatar = type;
     }
 }

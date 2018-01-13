@@ -1,10 +1,8 @@
 package aitamagotchi;
 
-import java.awt.EventQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.management.timer.Timer;
 
 /**
  *
@@ -25,7 +23,7 @@ public class AITamagotchi {
             }
         };
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(tamaLive, 0, 1, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(tamaLive, 0, 500, TimeUnit.MILLISECONDS);
     
     Runnable interfaceRefresh = new Runnable() {
             public void run() {
